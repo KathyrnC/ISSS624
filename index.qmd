@@ -2,10 +2,8 @@
 title: "ISSS624"
 ---
 
-This is a Quarto website.
+Welcome to Kathyrn's ISSS624 Applied Geospatial Analytics!
+
+In this webpage, I am going to share with you my learning journey of geospatial analytics.
 
 To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```

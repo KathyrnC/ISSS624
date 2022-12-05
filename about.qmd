@@ -4,6 +4,4 @@ title: "About"
 
 About this site
 
-```{r}
-1 + 1
-```
+Hi! Welcome to Kathyrn's learning journey of Applied Geospatial Analytics. 
