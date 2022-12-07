@@ -1,0 +1,242 @@
+---
+title: "In-class Exercise 2"
+editor: visual
+---
+
+### Setting the Analytical Tools
+
+Before we get started, we need to ensure that **spdep**, **sf**, **tmap** and **tidyverse** packages of R are currently installed in your R.
+
+-   sf is use for importing and handling geospatial data in R,
+
+-   tidyverse is mainly use for wrangling attribute data in R,
+
+-   spdep will be used to compute spatial weights, global and local spatial autocorrelation statistics, and
+
+-   tmap will be used to prepare cartographic quality chropleth map
+
+-   funModeling will be used for rapid Exploratory Data Analysis.
+
+```{r}
+pacman::p_load(sf, tidyverse, tmap, spdep, funModeling)
+```
+
+### Importing Geospatial Data
+
+In this in-class data, 2 data sets will be used, they are:
+
+-   geo_export
+
+-   nga_admbnda_adm2_osgof_20190417
+
+First, we are going to import the water point geospatial data (i.e. geo_export) by using the code chunk below.
+
+```{r}
+#| eval: false
+wp <- st_read(dsn = "data/aspatial", 
+              layer = "geo_export",
+              crs = 4326)%>%
+  #st_transform(crs = 26391)
+  filter(clean_coun == "Nigeria") #clean_country if csv or clean_coun if shp file
+```
+
+-   `st_read()` of **sf** package is used to import *geo_export* shapefile into R environment and save the imported geospatial data into simple feature data table.
+
+-   `filter()` of dplyr package is used to extract water point records of Nigeria.
+
+### Importing water point geospatial data
+
+Next, `write_rds()` of readr package is used to save the extracted sf data table (i.e. wp) into an output file in rds data format. The output file is called nga_admbnda_adm2_osgof_20190417*.rds* and it is saved in *geospatial* sub-folder.
+
+```{r}
+#| eval: false
+wp_nga <- write_rds(wp,"data/geospatial/nga_admbnda_adm2_osgof_20190417.rds")
+```
+
+### Importing Nigeria LGA boundary data
+
+Now, we are going to import the LGA boundary data into R environment by using the code chunk below.
+
+```{r}
+#| eval: false
+nga <- st_read(dsn = "data/geospatial",
+               layer = "nga_admbnda_adm2_osgof_20190417",
+               crs = 4326)
+```
+
+-   `st_read()` of **sf** package is used to import *nga_admbnda_adm2_osgof_20190417* shapefile into R environment and save the imported geospatial data into simple feature data table.
+
+## Data Wrangling
+
+### Recoding NA values into string
+
+In the code chunk below, `replace_na()` is used to recode all the *NA* values in *status_cle* field into *Unknown*.
+
+```{r}
+#| eval: false
+wp_nga <- read_rds("data/geospatial/nga_admbnda_adm2_osgof_20190417.rds") %>%
+  mutate(status_cle = replace_na(status_cle, "Unknown"))
+```
+
+### EDA
+
+In the code chunk below, `freq()` of **funModeling** package is used to display the distribution of *status_cle* field in *wp_nga*.
+
+```{r}
+#| eval: false
+freq(data=wp_nga, 
+     input = 'status_cle')
+```
+
+![](images/unnamed-chunk-6-1-01.png)
+
+## Extracting Water Point Data
+
+In this section, we will extract the water point records by using classes in *status_cle* field.
+
+### Extracting functional water point
+
+In the code chunk below, `filter()` of dplyr is used to select functional water points.
+
+```{r}
+#| eval: false
+wpt_functional <- wp_nga %>%
+  filter(status_cle %in%
+           c("Functional", 
+             "Functional but not in use",
+             "Functional but needs repair"))
+```
+
+```{r}
+#| eval: false
+freq(data=wpt_functional, 
+     input = 'status_cle')
+```
+
+### Extracting non-functional water point
+
+![](images/unnamed-chunk-8-1-01.png)
+
+In the code chunk below, `filter()` of dplyr is used to select non-functional water points.
+
+```{r}
+#| eval: false
+wpt_nonfunctional <- wp_nga %>%
+  filter(status_cle %in%
+           c("Abandoned/Decommissioned", 
+             "Abandoned",
+             "Non-Functional",
+             "Non functional due to dry season",
+             "Non-Functional due to dry season"))
+```
+
+```{r}
+#| eval: false
+freq(data=wpt_nonfunctional, 
+     input = 'status_cle')
+```
+
+![](images/unnamed-chunk-10-1.png)
+
+### Extracting water point with Unknown class
+
+In the code chunk below, `filter()` of dplyr is used to select water points with unknown status.
+
+```{r}
+#| eval: false
+wpt_unknown <- wp_nga %>%
+  filter(status_cle == "Unknown")
+```
+
+## Performing Point-in-Polygon Count
+
+```{r}
+#| eval: false
+nga_wp <- nga %>% 
+  mutate(`total wpt` = lengths(
+    st_intersects(nga, wp_nga))) %>%
+  mutate(`wpt functional` = lengths(
+    st_intersects(nga, wpt_functional))) %>%
+  mutate(`wpt non-functional` = lengths(
+    st_intersects(nga, wpt_nonfunctional))) %>%
+  mutate(`wpt unknown` = lengths(
+    st_intersects(nga, wpt_unknown)))
+```
+
+## Saving the Analytical Data Table
+
+```{r}
+#| eval: false
+nga_wp <- nga_wp %>%
+  mutate(pct_functional = `wpt functional`/`total wpt`) %>%
+  mutate(`pct_non-functional` = `wpt non-functional`/`total wpt`)
+```
+
+-   `mutate()` of **dplyr** package is used to derive two fields namely *pct_functional* and *pct_non-functional*.
+
+Now, we have the tidy sf data table subsequent analysis. We will save the sf data table into rds format.
+
+```{r}
+#| eval: false
+write_rds(nga_wp, "data/geospatial/nga_admbnda_adm2_osgof_20190417.rds")
+```
+
+Before you end this section, please remember to delete away all the raw data. Notice that the only data file left is *nga_wp.rds* and it's file size is around 2.1MB.
+
+## Visualising the spatial distribution of water points
+
+```{r}
+nga_wp <- read_rds("data/geospatial/nga_admbnda_adm2_osgof_20190417.rds")
+total <- qtm(nga_wp, "total wpt")
+wp_functional <- qtm(nga_wp, "wpt functional")
+wp_nonfunctional <- qtm(nga_wp, "wpt non-functional")
+unknown <- qtm(nga_wp, "wpt unknown")
+
+tmap_arrange(total, wp_functional, wp_nonfunctional, unknown, asp=1, ncol=2)
+```
+
+First, we will exclude LGA without water point from the analysis
+
+```{r}
+#| eval: false
+nga_wp <- nga_wp %>%
+  filter(`total wpt` > 0)
+```
+
+Next,
+
+```{r}
+#| eval: false
+knn16_w <- st_knn(nga_wp$geometry, k = 16)
+summary(knn16_w)
+```
+
+**Checking contiguity of areas**
+
+```{r}
+#| eval: false
+nga_nb <- nga_wp %>% 
+  mutate(nb = st_contiguity(geometry),
+         wt = st_weights(nb),
+         .before = 1)
+```
+
+```{r}
+#| eval: false
+nga_lisa <- nga_nb %>% 
+  mutate(local_moran = local_moran(
+    `pct_non-functional`, nb, wt, nsim = 99),
+    .before = 1)
+```
+
+```{r}
+#| eval: false
+nga_lisa_sig <- nga_lisa %>%
+  filter(local_moran$p_ii <= 0.05)
+```
+
+Note:
+
+#find ratio to total vs functional wpr functional/ total wpt wpt non-functional/ total wpt
+
+#before pushing, remove the big files submit html code if can't push - zip with folder where qmd and data folder is placed
