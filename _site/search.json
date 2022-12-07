@@ -4,14 +4,7 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "1 + 1\n\n[1] 2"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "ISSS624",
-    "section": "",
-    "text": "In this webpage, I am going to share with you my learning journey of geospatial analytics.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "Hi! Welcome to Kathyrn’s learning journey of Applied Geospatial Analytics."
   },
   {
     "objectID": "Hands-on_Ex1/Hands-on_Ex1.html",
@@ -145,5 +138,12 @@
     "title": "In-class Exercise 3: Geographical Segmentation with Spatially Constrained Clustering Techniques",
     "section": "Spatially Constrained Clustering: ClustGeo Method",
     "text": "Spatially Constrained Clustering: ClustGeo Method\nIn this section, you will gain hands-on experience on using functions provided by ClustGeo package to perform non-spatially constrained hierarchical cluster analysis and spatially constrained cluster analysis.\n\nWard-like hierarchical clustering: ClustGeo\nClustGeo package provides function called hclustgeo() to perform a typical Ward-like hierarchical clustering just like hclust() you learned in previous section.\nTo perform non-spatially constrained hierarchical clustering, we only need to provide the function a dissimilarity matrix as shown in the code chunk below.\n\nnongeo_cluster <- hclustgeo(proxmat)\nplot(nongeo_cluster, cex = 0.5)\nrect.hclust(nongeo_cluster, \n            k = 6, \n            border = 2:5)\n\n\n\n\nNote that the dissimilarity matrix must be an object of class dist, i.e. an object obtained with the function dist(). For sample code chunk, refer to 5.7.6 Computing proximity matrix\n\nMapping the clusters formed\nSimilarly, we can plot the clusters on a categorical area shaded map by using the steps we learned in 5.7.12 Mapping the clusters formed.\n\ngroups <- as.factor(cutree(nongeo_cluster, k=6))\n\n\nshan_sf_ngeo_cluster <- cbind(shan_sf, as.matrix(groups)) %>%\n  rename(`CLUSTER` = `as.matrix.groups.`)\n\n\nqtm(shan_sf_ngeo_cluster, \"CLUSTER\")\n\n\n\n\n\n\n\nSpatially Constrained Hierarchical Clustering\nBefore we can performed spatially constrained hierarchical clustering, a spatial distance matrix will be derived by using st_distance() of sf package.\n\nNOTE: clust_geo can also consider distance matrix\n\n\ndist <- st_distance(shan_sf, shan_sf)\ndistmat <- as.dist(dist)\n\nNotice that as.dist() is used to convert the data frame into matrix.\nNext, choicealpha() will be used to determine a suitable value for the mixing parameter alpha as shown in the code chunk below.\n\nNOTE: use ‘capital letter K’ rather than small k –> both refers to number of clusters determined from Ward dendrogram above. (Source: Introduction to ClustGeo)\n\n\ncr <- choicealpha(proxmat, distmat, range.alpha = seq(0, 1, 0.1), K=6, graph = TRUE)\n\n\n\n\n\n\n\nWith reference to the graphs above, alpha = 0.3 (cut off value in graph above) will be used as shown in the code chunk below.\n\nNOTE: Alpha value ranges from 0 (only attribute homogeneity) <-> 1 (only spatial homogeneity), thus try to balance them out.\n\n\nclustG <- hclustgeo(proxmat, distmat, alpha = 0.3)\n\nNext, cutree() is used to derive the cluster objecct.\n\ngroups <- as.factor(cutree(clustG, k=6))\n\nWe will then join back the group list with shan_sf polygon feature data frame by using the code chun below.\n\nshan_sf_Gcluster <- cbind(shan_sf, as.matrix(groups)) %>%\n  rename(`CLUSTER` = `as.matrix.groups.`)\n\nWe can not plot the map of the newly delineated spatially constrained clusters.\n\nqtm(shan_sf_Gcluster, \"CLUSTER\")"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ISSS624",
+    "section": "",
+    "text": "In this webpage, I am going to share with you my learning journey of geospatial analytics.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
   }
 ]
