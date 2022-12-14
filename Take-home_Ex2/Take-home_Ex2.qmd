@@ -542,7 +542,7 @@ corrplot.mixed(cluster_vars.cor,
 
 ## Hierarchy Cluster Analysis
 
-### Step 1: Extracting clustering variables
+### Extracting clustering variables
 
 The code chunk below will be used to extract the clustering variables from the *shan_sf* simple feature object into data.frame.
 
@@ -563,7 +563,9 @@ row.names(cluster_vars) <- cluster_vars$"ADM2_EN"
 head(cluster_vars,5)
 ```
 
-![](images/paste-B0449DD8.png)Using the code chunk below, we will now delete the "ADM2_EN' field.
+![](images/paste-B0449DD8.png)
+
+Using the code chunk below, we will now delete the "ADM2_EN' field.
 
 ```{r eval=FALSE}
 nga_wp_pct <- select(cluster_vars, c(2:10))
@@ -572,7 +574,7 @@ head(nga_wp_pct, 5)
 
 ![](images/paste-A36102CC.png)
 
-### Step 2: Data Standardisation
+### Data Standardisation
 
 In general, multiple variables will be used in cluster analysis. It is not unusual their values range are different. In order to avoid the cluster analysis result is baised to clustering variables with large values, it is useful to standardise the input variables before performing cluster analysis.
 
@@ -586,7 +588,9 @@ nga_wp_pct.std <- normalize(nga_wp_pct)
 summary(nga_wp_pct.std)
 ```
 
-![](images/paste-6C0C315A.png)Notice that the values range of the Min-max standardised clustering variables are 0 to 1 now.
+![](images/paste-6C0C315A.png)
+
+Notice that the values range of the Min-max standardised clustering variables are 0 to 1 now.
 
 ### Z-score standardization
 
@@ -597,7 +601,9 @@ nga_wp_pct.z <- scale(nga_wp_pct)
 describe(nga_wp_pct.z)
 ```
 
-![](images/paste-408A5AE5.png)![](images/paste-7D337F56.png)![](images/paste-094922D1.png)Notice the mean and standard deviation of the Z-score standardized clustering variables are 0 and 1 respectively.
+![](images/paste-408A5AE5.png)![](images/paste-7D337F56.png)![](images/paste-094922D1.png)
+
+Notice the mean and standard deviation of the Z-score standardized clustering variables are 0 and 1 respectively.
 
 Note: describe() of psych package is used here instead of summary() of Base R because the earlier provides standard deviation.
 
@@ -785,7 +791,9 @@ gap_stat <- clusGap(nga_wp_pct,
 print(gap_stat, method = "firstmax")
 ```
 
-![](images/paste-1AB10B11.png)Next, we can visualise the plot by using [*fviz_gap_stat()*](https://rpkgs.datanovia.com/factoextra/reference/fviz_nbclust.html) of [**factoextra**](https://rpkgs.datanovia.com/factoextra/) package.
+![](images/paste-1AB10B11.png)
+
+Next, we can visualise the plot by using [*fviz_gap_stat()*](https://rpkgs.datanovia.com/factoextra/reference/fviz_nbclust.html) of [**factoextra**](https://rpkgs.datanovia.com/factoextra/) package.
 
 ```{r eval=FALSE}
 fviz_gap_stat(gap_stat)
@@ -884,7 +892,9 @@ Next, *qtm()* of **tmap** package is used to plot the choropleth map showing the
 qtm(nga_wp_cluster, "CLUSTER")
 ```
 
-![](images/paste-E2FC8D1B.png)From the choropleth map, we can see that the clusters are very fragmented. This may be due to limitations of non-spatial clustering algorithm like hierarchical clustering analysis.
+![](images/paste-E2FC8D1B.png)
+
+From the choropleth map, we can see that the clusters are very fragmented. This may be due to limitations of non-spatial clustering algorithm like hierarchical clustering analysis.
 
 ## Spatially Constrained Clustering: SKATER approach
 
@@ -1102,7 +1112,9 @@ nga_wp_ngeo_cluster <- cbind(nga_wp, as.matrix(groups)) %>%
 qtm(nga_wp_ngeo_cluster, "CLUSTER")
 ```
 
-### ![](images/paste-1252D013.png)Spatially Constrained Hierarchical Clustering
+![](images/paste-1252D013.png)
+
+### Spatially Constrained Hierarchical Clustering
 
 Before we can performed spatially constrained hierarchical clustering, a spatial distance matrix will be derived by using [`st_distance()`](https://r-spatial.github.io/sf/reference/geos_measures.html) of sf package.
 
@@ -1119,7 +1131,9 @@ Next, choicealpha() will be used to determine a suitable value for the mixing pa
 cr <- choicealpha(proxmat, distmat, range.alpha = seq(0, 1, 0.1), K=5, graph = TRUE)
 ```
 
-![](images/paste-0D086F72.png)![](images/paste-7E30D254.png)Based on the results shown above, we will use an alpha value of 0.1.
+![](images/paste-0D086F72.png)![](images/paste-7E30D254.png)
+
+Based on the results shown above, we will use an alpha value of 0.1.
 
 ```{r eval=FALSE}
 clustG <- hclustgeo(proxmat, distmat, alpha = 0.1)

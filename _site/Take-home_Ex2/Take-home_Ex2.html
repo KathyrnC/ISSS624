@@ -246,8 +246,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#correlation-analysis" id="toc-correlation-analysis" class="nav-link" data-scroll-target="#correlation-analysis">Correlation Analysis</a></li>
   <li><a href="#hierarchy-cluster-analysis" id="toc-hierarchy-cluster-analysis" class="nav-link" data-scroll-target="#hierarchy-cluster-analysis">Hierarchy Cluster Analysis</a>
   <ul class="collapse">
-  <li><a href="#step-1-extracting-clustering-variables" id="toc-step-1-extracting-clustering-variables" class="nav-link" data-scroll-target="#step-1-extracting-clustering-variables">Step 1: Extracting clustering variables</a></li>
-  <li><a href="#step-2-data-standardisation" id="toc-step-2-data-standardisation" class="nav-link" data-scroll-target="#step-2-data-standardisation">Step 2: Data Standardisation</a></li>
+  <li><a href="#extracting-clustering-variables" id="toc-extracting-clustering-variables" class="nav-link" data-scroll-target="#extracting-clustering-variables">Extracting clustering variables</a></li>
+  <li><a href="#data-standardisation" id="toc-data-standardisation" class="nav-link" data-scroll-target="#data-standardisation">Data Standardisation</a></li>
   <li><a href="#min-max-standardisation" id="toc-min-max-standardisation" class="nav-link" data-scroll-target="#min-max-standardisation">Min-Max standardisation</a></li>
   <li><a href="#z-score-standardization" id="toc-z-score-standardization" class="nav-link" data-scroll-target="#z-score-standardization">Z-score standardization</a></li>
   <li><a href="#visualizing-the-standardized-clustering-variables" id="toc-visualizing-the-standardized-clustering-variables" class="nav-link" data-scroll-target="#visualizing-the-standardized-clustering-variables">Visualizing the standardized clustering variables</a></li>
@@ -277,7 +277,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#spatially-constrained-clustering-clustgeo-method" id="toc-spatially-constrained-clustering-clustgeo-method" class="nav-link" data-scroll-target="#spatially-constrained-clustering-clustgeo-method">Spatially Constrained Clustering: ClustGeo Method</a>
   <ul class="collapse">
   <li><a href="#ward-like-hierarchical-clustering-clustgeo" id="toc-ward-like-hierarchical-clustering-clustgeo" class="nav-link" data-scroll-target="#ward-like-hierarchical-clustering-clustgeo">Ward-like hierarchical clustering: ClustGeo</a></li>
-  <li><a href="#spatially-constrained-hierarchical-clustering" id="toc-spatially-constrained-hierarchical-clustering" class="nav-link" data-scroll-target="#spatially-constrained-hierarchical-clustering"><img src="images/paste-1252D013.png" class="img-fluid">Spatially Constrained Hierarchical Clustering</a></li>
+  <li><a href="#spatially-constrained-hierarchical-clustering" id="toc-spatially-constrained-hierarchical-clustering" class="nav-link" data-scroll-target="#spatially-constrained-hierarchical-clustering">Spatially Constrained Hierarchical Clustering</a></li>
   </ul></li>
   <li><a href="#visual-interpretation-of-clusters" id="toc-visual-interpretation-of-clusters" class="nav-link" data-scroll-target="#visual-interpretation-of-clusters">Visual Interpretation of Clusters</a>
   <ul class="collapse">
@@ -765,8 +765,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="hierarchy-cluster-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="hierarchy-cluster-analysis">Hierarchy Cluster Analysis</h2>
-<section id="step-1-extracting-clustering-variables" class="level3">
-<h3 class="anchored" data-anchor-id="step-1-extracting-clustering-variables">Step 1: Extracting clustering variables</h3>
+<section id="extracting-clustering-variables" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-clustering-variables">Extracting clustering variables</h3>
 <p>The code chunk below will be used to extract the clustering variables from the <em>shan_sf</em> simple feature object into data.frame.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>cluster_vars <span class="ot">&lt;-</span> nga_wp <span class="sc">%&gt;%</span></span>
@@ -781,15 +781,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(cluster_vars) <span class="ot">&lt;-</span> cluster_vars<span class="sc">$</span><span class="st">"ADM2_EN"</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cluster_vars,<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><img src="images/paste-B0449DD8.png" class="img-fluid">Using the code chunk below, we will now delete the “ADM2_EN’ field.</p>
+<p><img src="images/paste-B0449DD8.png" class="img-fluid"></p>
+<p>Using the code chunk below, we will now delete the “ADM2_EN’ field.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>nga_wp_pct <span class="ot">&lt;-</span> <span class="fu">select</span>(cluster_vars, <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">10</span>))</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(nga_wp_pct, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="images/paste-A36102CC.png" class="img-fluid"></p>
 </section>
-<section id="step-2-data-standardisation" class="level3">
-<h3 class="anchored" data-anchor-id="step-2-data-standardisation">Step 2: Data Standardisation</h3>
+<section id="data-standardisation" class="level3">
+<h3 class="anchored" data-anchor-id="data-standardisation">Data Standardisation</h3>
 <p>In general, multiple variables will be used in cluster analysis. It is not unusual their values range are different. In order to avoid the cluster analysis result is baised to clustering variables with large values, it is useful to standardise the input variables before performing cluster analysis.</p>
 </section>
 <section id="min-max-standardisation" class="level3">
@@ -800,7 +801,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nga_wp_pct.std)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><img src="images/paste-6C0C315A.png" class="img-fluid">Notice that the values range of the Min-max standardised clustering variables are 0 to 1 now.</p>
+<p><img src="images/paste-6C0C315A.png" class="img-fluid"></p>
+<p>Notice that the values range of the Min-max standardised clustering variables are 0 to 1 now.</p>
 </section>
 <section id="z-score-standardization" class="level3">
 <h3 class="anchored" data-anchor-id="z-score-standardization">Z-score standardization</h3>
@@ -809,7 +811,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>nga_wp_pct.z <span class="ot">&lt;-</span> <span class="fu">scale</span>(nga_wp_pct)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(nga_wp_pct.z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><img src="images/paste-408A5AE5.png" class="img-fluid"><img src="images/paste-7D337F56.png" class="img-fluid"><img src="images/paste-094922D1.png" class="img-fluid">Notice the mean and standard deviation of the Z-score standardized clustering variables are 0 and 1 respectively.</p>
+<p><img src="images/paste-408A5AE5.png" class="img-fluid"><img src="images/paste-7D337F56.png" class="img-fluid"><img src="images/paste-094922D1.png" class="img-fluid"></p>
+<p>Notice the mean and standard deviation of the Z-score standardized clustering variables are 0 and 1 respectively.</p>
 <p>Note: describe() of psych package is used here instead of summary() of Base R because the earlier provides standard deviation.</p>
 </section>
 <section id="visualizing-the-standardized-clustering-variables" class="level3">
@@ -976,7 +979,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the result</span></span>
 <span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(gap_stat, <span class="at">method =</span> <span class="st">"firstmax"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><img src="images/paste-1AB10B11.png" class="img-fluid">Next, we can visualise the plot by using <a href="https://rpkgs.datanovia.com/factoextra/reference/fviz_nbclust.html"><em>fviz_gap_stat()</em></a> of <a href="https://rpkgs.datanovia.com/factoextra/"><strong>factoextra</strong></a> package.</p>
+<p><img src="images/paste-1AB10B11.png" class="img-fluid"></p>
+<p>Next, we can visualise the plot by using <a href="https://rpkgs.datanovia.com/factoextra/reference/fviz_nbclust.html"><em>fviz_gap_stat()</em></a> of <a href="https://rpkgs.datanovia.com/factoextra/"><strong>factoextra</strong></a> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_gap_stat</span>(gap_stat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1054,7 +1058,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(nga_wp_cluster, <span class="st">"CLUSTER"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><img src="images/paste-E2FC8D1B.png" class="img-fluid">From the choropleth map, we can see that the clusters are very fragmented. This may be due to limitations of non-spatial clustering algorithm like hierarchical clustering analysis.</p>
+<p><img src="images/paste-E2FC8D1B.png" class="img-fluid"></p>
+<p>From the choropleth map, we can see that the clusters are very fragmented. This may be due to limitations of non-spatial clustering algorithm like hierarchical clustering analysis.</p>
 </section>
 </section>
 <section id="spatially-constrained-clustering-skater-approach" class="level2">
@@ -1227,10 +1232,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(nga_wp_ngeo_cluster, <span class="st">"CLUSTER"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><img src="images/paste-1252D013.png" class="img-fluid"></p>
 </section>
 </section>
 <section id="spatially-constrained-hierarchical-clustering" class="level3">
-<h3 class="anchored" data-anchor-id="spatially-constrained-hierarchical-clustering"><img src="images/paste-1252D013.png" class="img-fluid">Spatially Constrained Hierarchical Clustering</h3>
+<h3 class="anchored" data-anchor-id="spatially-constrained-hierarchical-clustering">Spatially Constrained Hierarchical Clustering</h3>
 <p>Before we can performed spatially constrained hierarchical clustering, a spatial distance matrix will be derived by using <a href="https://r-spatial.github.io/sf/reference/geos_measures.html"><code>st_distance()</code></a> of sf package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>dist <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(nga_wp, nga_wp)</span>
@@ -1241,7 +1247,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>cr <span class="ot">&lt;-</span> <span class="fu">choicealpha</span>(proxmat, distmat, <span class="at">range.alpha =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.1</span>), <span class="at">K=</span><span class="dv">5</span>, <span class="at">graph =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><img src="images/paste-0D086F72.png" class="img-fluid"><img src="images/paste-7E30D254.png" class="img-fluid">Based on the results shown above, we will use an alpha value of 0.1.</p>
+<p><img src="images/paste-0D086F72.png" class="img-fluid"><img src="images/paste-7E30D254.png" class="img-fluid"></p>
+<p>Based on the results shown above, we will use an alpha value of 0.1.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>clustG <span class="ot">&lt;-</span> <span class="fu">hclustgeo</span>(proxmat, distmat, <span class="at">alpha =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
