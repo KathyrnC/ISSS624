@@ -1,4 +1,0 @@
----
-title: "In-class Exercise 4"
-editor: visual
----
