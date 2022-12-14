@@ -59,7 +59,7 @@ The R packages needed for this exercise are as follows:
 
 The code chunks below installs and launches these R packages into R environment.
 
-```{r}
+```{r eval=FALSE}
 pacman::p_load(rgdal, spdep, tmap, sf, ggpubr, cluster, factoextra, NbClust, heatmaply, corrplot, psych, tidyverse, funModeling, ClustGeo, GGally)
 ```
 
@@ -86,6 +86,8 @@ wp <- st_read(dsn = "data",
   filter(clean_coun == "Nigeria")
 ```
 
+![](images/paste-5DBB523E.png)
+
 Next, `write_rds()` of readr package is used to save the extracted sf data table (i.e. wp) into an output file in rds data format. The output file is called wp\_*nga.rds* and it is saved in *data* sub-folder.
 
 ```{r eval=FALSE}
@@ -99,6 +101,8 @@ nga <- st_read(dsn = "data",
                layer = "nga_admbnda_adm2_osgof_20190417",
                crs = 4326)
 ```
+
+![](images/paste-8886BDE3.png)
 
 ### **Data Wrangling**
 
