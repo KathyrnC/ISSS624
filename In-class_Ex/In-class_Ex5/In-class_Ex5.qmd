@@ -370,7 +370,17 @@ tm_shape(gwr_sf.fixed) +
 prob_T
 ```
 
+The code chunk below converts the t_score of a variable to its equivalent p-value to retrieve the statistically significant data rows:
+
 ```{r}
+t_score <- gwr_sf.fixed$distance_to_tertiary_road_SE
+pval_distance_tertiary = 2*pt(q = t_score, df = 4755, lower.tail = FALSE)
+gwr_sf.fixed_SE <- cbind(gwr_sf.fixed, pval_distance_tertiary)
+```
+
+```{r}
+tmap_mode("view")
+
 tertiary_TV <- tm_shape(Osun) +
   tm_polygons(alpha = 0.1) +
   tm_shape(gwr_sf.fixed) +
@@ -378,5 +388,18 @@ tertiary_TV <- tm_shape(Osun) +
           border.col = "gray60",
           border.lwd = 1) +
   tm_view(set.zoom.limits = c(8,14))
-tertiary_TV
+
+tertiary_SE <- tm_shape(Osun)+
+    tm_polygons(alpha=0.1)+
+    tm_shape(gwr_sf.fixed_SE)+
+    tm_dots(col="distance_to_tertiary_road_SE",
+            border.col="gray60",
+            border.lwd = 1)+
+    tm_view(set.zoom.limits = c(8,14))
+
+tmap_arrange(tertiary_SE, tertiary_TV, asp=1, ncol=2, sync=TRUE)
 ```
+
+# Conclusion
+
+**Geographically weighted logistic regression model is a better model than non-geographically weighted logistic regression model**, given higher accuracy, sensitivity and specificity.
